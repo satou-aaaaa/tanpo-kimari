@@ -50,9 +50,15 @@
     kau: "担保のついた家を買った人は、貸した人に頼まれて代金を払えば、担保が消えます（第378条）。借りて住む人には6か月の猶予があります（第395条）。",
   };
 
+  // part:ri:begin（shared-workflows の template/parts/data/ri.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   const ri = (R, a, b) => a + Math.floor(R() * (b - a + 1));
+  // part:ri:end
+  // part:shuffle:begin（shared-workflows の template/parts/data/shuffle.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   function shuffle(R, a) { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = ri(R, 0, i); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+  // part:shuffle:end
+  // part:pickN:begin（shared-workflows の template/parts/data/pickN.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   function pickN(R, a, n) { return shuffle(R, a).slice(0, n); }
+  // part:pickN:end
   const MEDIA = { ryuchi: "預かる", shichi: "質", teito: "抵当", tochi: "土地と建物", kau: "買う・借りる" };
   const WHO = ["Aさん", "Bさん", "Cさん", "Dさん"];
   const nOpt = (lv) => (lv === 0 ? 3 : 4);
@@ -188,8 +194,12 @@
 
   const BY = Object.fromEntries(KINDS.map((k) => [k.id, k]));
   const kindsOf = (lv) => KINDS.filter((k) => k.lv === lv).map((k) => k.id);
+  // part:seedOf:begin（shared-workflows の template/parts/data/seedOf.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   function seedOf(str) { let h = 2166136261; for (const ch of String(str)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+  // part:seedOf:end
+  // part:rng:begin（shared-workflows の template/parts/data/rng.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  // part:rng:end
   function make(tag) {
     const [kind] = String(tag).split("|"), k = Object.prototype.hasOwnProperty.call(BY, kind) ? BY[kind] : null;
     if (!k) return null;
